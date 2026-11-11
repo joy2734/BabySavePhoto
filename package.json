@@ -1,0 +1,16 @@
+{
+  "name": "devapp",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/api"],
+  "scripts": {
+    "dev:mobile": "npm --prefix apps/mobile run start",
+    "dev:api": "npm --workspace @devapp/api run dev",
+    "start:api": "npm --workspace @devapp/api run start",
+    "check:api": "npm --workspace @devapp/api run typecheck",
+    "check:mobile": "npm --prefix apps/mobile run typecheck"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
