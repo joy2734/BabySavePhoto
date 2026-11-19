@@ -1,55 +1,58 @@
-# devApp
+# 쑥쑥찰칵 개발 앱
 
-모바일 앱 개발을 위한 초기 모노레포입니다.
+기능정의서 v1.0을 바탕으로 만든 **첫 번째 동작 가능한 개발 버전**입니다. Expo SDK 57 앱과 Express API로 구성됩니다.
 
-- `apps/mobile`: Expo SDK 57 + React Native + TypeScript + Expo Router
-- `apps/api`: Express + TypeScript 기반 API
+## 현재 구현된 흐름
 
-## 요구 환경
+| 기능정의서 | 구현 내용 |
+| --- | --- |
+| USR-01~06 일부 | 이메일 회원가입·로그인·로그아웃, 계정 이름 수정, 아이 등록·선택·이름과 생년월일 수정 |
+| ALB-01, 03~06, 10 일부 | 사진 한 장씩 선택·업로드, 날짜·개월별 분류, 상세 보기, 메모, 즐겨찾기, 삭제 |
+| FAM-01~06 | 24시간 단일 사용 초대 코드, 가족 참여, 기본 비공개 사진의 가족 공개 전환, 좋아요·댓글 |
+| CAR-01, 03, 04 | 수유·수면·배변 기록 및 오늘 집계, 중복·수면 겹침·시간 역전 검증 |
+| SYS-02 | 가족 참여·좋아요·댓글 알림 목록과 읽음 처리 |
 
-- Node.js 22 이상, npm
-- 휴대폰에서 테스트할 때 Expo Go와 동일한 Wi-Fi 연결
+가족에게 공유되지 않은 사진과 육아 기록은 다른 계정에서 볼 수 없습니다. 아이 정보 수정과 육아 기록은 등록한 계정만 사용할 수 있습니다. 앱에는 홈, 앨범, 육아 기록, 알림, 설정 탭이 있습니다.
 
-## 설치
+## 실행
 
-```bash
-npm install
-cd apps/mobile && npm install && cd ../..
+Node.js 22 이상이 필요합니다. 저장소 루트에서 다음 명령을 실행합니다. PowerShell에서 `npm.ps1`이 차단되면 아래처럼 `npm.cmd`를 사용하세요.
+
+```powershell
+npm.cmd ci
+npm.cmd --prefix apps/mobile ci
+Copy-Item apps/mobile/.env.example apps/mobile/.env
 ```
 
-## 실행 (터미널 2개)
+`apps/mobile/.env`의 `EXPO_PUBLIC_API_URL`을 실행 환경에 맞게 수정합니다.
 
-```bash
-# 1. API 서버: http://localhost:4000/api/health
-npm run dev:api
-
-# 2. 모바일 앱 개발 서버
-npm run dev:mobile
-```
-
-두 명령은 각각 별도 터미널에서 실행합니다. Expo가 표시하는 QR 코드를 Expo Go 앱으로 스캔합니다.
-
-## 모바일에서 API 연결
-
-`apps/mobile/.env.example`을 복사해 `apps/mobile/.env`을 만들고 `EXPO_PUBLIC_API_URL`을 환경에 맞게 변경합니다.
-
-| 개발 환경 | API URL 예시 |
+| 환경 | 값 |
 | --- | --- |
 | 웹 / iOS 시뮬레이터 | `http://localhost:4000` |
 | Android 에뮬레이터 | `http://10.0.2.2:4000` |
-| 실제 휴대폰 | `http://192.168.x.x:4000` (개발 PC의 LAN IPv4로 교체) |
+| 실기기 | `http://개발-PC의-LAN-IP:4000` |
 
-실제 휴대폰은 개발 PC와 같은 네트워크에 연결해야 합니다. Windows 방화벽에서 개발용 API 포트 4000의 접근을 허용해야 할 수 있습니다. 개발 서버는 LAN 접속을 위해 기본적으로 모든 인터페이스에서 대기하므로 신뢰할 수 있는 개인 네트워크에서만 사용하세요. 인터넷에 직접 노출하지 마세요.
+서로 다른 터미널에서 실행합니다.
 
-`EXPO_PUBLIC_` 환경 변수는 앱 번들에 포함됩니다. 비밀번호나 API 비밀키를 저장하지 마세요.
+```powershell
+npm.cmd run dev:api
+npm.cmd run dev:mobile
+```
 
-API 서버 환경변수를 변경하려면 `apps/api/.env.example`을 `apps/api/.env`로 복사하세요. 개발 상태 확인 API: `GET /api/health`.
+Expo QR 코드를 Expo Go로 열고 가입한 뒤 아이를 등록하면 사용할 수 있습니다. 실기기와 개발 PC는 같은 Wi-Fi에 연결해야 합니다. API는 기본적으로 4000번 포트에서 대기합니다. API 설정은 `apps/api/.env.example`을 참고하세요.
 
 ## 검사
 
-```bash
-npm run check:api
-npm run check:mobile
+```powershell
+npm.cmd run check:api
+npm.cmd run check:mobile
+npm.cmd run test:api
 ```
 
-현재 앱은 초기 UI 및 헬스체크만 제공합니다. 데이터베이스, 로그인, 배포용 HTTPS, 비밀키 관리, 테스트 및 운영 인프라는 요구사항이 정해지면 추가하세요.
+API 데이터는 기본적으로 `apps/api/data/app.json`에 저장됩니다. `DATA_FILE` 환경변수로 경로를 바꿀 수 있습니다. 앱의 로그인 토큰은 iOS·Android에서 SecureStore에, 웹에서 브라우저 저장소에 보관됩니다.
+
+## 다음 개발 단계
+
+이 버전은 기능정의서 전체 구현이 아닙니다. 아이 프로필 사진·출산예정일, 영상 업로드, 카메라 촬영, 임신 모드, 성장영상·AI, 커뮤니티, 포토상품·결제, 푸시·구독·다국어는 아직 구현하지 않았습니다. 현재 알림은 앱 내부 목록이며 기기 푸시는 보내지 않습니다. 기능정의서 11장의 정책(POL-01~12), 약관·개인정보 처리 문서, 저장 용량·파일 제한, 가족 역할, 미디어 보관 기간도 확정이 필요합니다.
+
+현재 JSON 파일에 사진을 base64로 저장하는 구조는 개발·검증용입니다. 실제 서비스 운영 전에는 데이터베이스와 별도 미디어 저장소, HTTPS, 백업, 접근 로그, 결제 검증을 도입해야 합니다.

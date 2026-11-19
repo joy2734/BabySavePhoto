@@ -8,3 +8,5 @@ dist-check/
 .expo/
 .DS_Store
 *.log
+.npm-cache/
+apps/api/data/

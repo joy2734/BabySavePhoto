@@ -8,7 +8,8 @@
     "dev:api": "npm --workspace @devapp/api run dev",
     "start:api": "npm --workspace @devapp/api run start",
     "check:api": "npm --workspace @devapp/api run typecheck",
-    "check:mobile": "npm --prefix apps/mobile run typecheck"
+    "check:mobile": "npm --prefix apps/mobile run typecheck",
+    "test:api": "npm --workspace @devapp/api run test"
   },
   "engines": {
     "node": ">=22"
